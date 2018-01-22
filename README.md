@@ -13,6 +13,7 @@ Today, this package scrapes information only in São Paulo. As an example, we ca
 ```{r}
 brcrimR::get_summarized_table_sp(year = '2017', city = '0')
 ```
+In order to get the city's code, you can load the citys' data: `r data("cities")`. Zero (0) is for all cities.
 
 São Paulo's Security Office also disponibilize detailed information on the crime reports that originated the table above. One can obtain such information using
 
@@ -21,6 +22,7 @@ brcrimR::get_detailed_table_sp(folder = 'btnHomicicio',
 #this is not a typo
 year = '2017', month = '1', department = '0')
 ```
+In order to get the police station's code, you can load the police stations' data: `r data("police_stations")`. Zero (0) is for all police_stations.
 
 # TODO
 
