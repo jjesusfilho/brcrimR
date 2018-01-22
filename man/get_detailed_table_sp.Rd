@@ -5,7 +5,7 @@
 \title{Download detailed information publicized by São Paulo's Security Office}
 \usage{
 get_detailed_table_sp(folder, year, month, department,
-  url = "http://www.ssp.sp.gov.br/transparenciassp/", ...)
+  url = "http://www.ssp.sp.gov.br/transparenciassp/", helper = T, ...)
 }
 \arguments{
 \item{year}{Year to download.}
