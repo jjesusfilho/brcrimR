@@ -4,35 +4,40 @@
 #'@param city Intended city. Is a number between 1 and 645, representing the rank of the city in alphabetical order.
 #'@param type Formulary to make the request, encodes the type of information to be downloaded.
 #'"ctl00$conteudo$$btnMes" downloads recorded crime count.
-#'
+#'@param region Intended region. Is a number between 0 and 9, representing an administrative region.
+#'@param police_station number of the police station
+
 #' @export
-get_summarized_table_sp <- function(year, city, type = "ctl00$conteudo$btnMensal"){
-  url <- 'http://www.ssp.sp.gov.br/Estatistica/Pesquisa.aspx'
+get_summarized_table_sp <-
+  function (year,
+            city,
+            type = "ctl00$conteudo$btnMensal",
+            region = "0",
+            police_station = "0")
+  {
+    url <- "http://www.ssp.sp.gov.br/Estatistica/Pesquisa.aspx"
+    pivot <- httr::GET(url)
+    states <- get_viewstate(pivot)
+    params <- list(
+      `__EVENTTARGET` = type,
+      `__EVENTARGUMENT` = "",
+      `__LASTFOCUS` = "",
+      `__VIEWSTATE` = states$vs,
+      `__EVENTVALIDATION` = states$ev,
+      `ctl00$conteudo$ddlAnos` = year,
+      `ctl00$conteudo$ddlRegioes` = region,
+      `ctl00$conteudo$ddlMunicipios` = city,
+      `ctl00$conteudo$ddlDelegacias` = police_station
+    )
+    httr::POST(url, body = params, encode = "form") %>%
+      xml2::read_html() %>%
+      rvest::html_table() %>% dplyr::first()  %>%
+      dplyr::mutate_at(.funs = parse_number_br, .vars = dplyr::vars(Jan:Total)) %>%
+      dplyr::mutate(municipio = city,
+                    regiao = region,
+                    ano = year)
+  }
 
-  pivot <- httr::GET(url)
-  #serve apenas para pegarmos um view_state e um event_validation valido
-
-  states <- get_viewstate(pivot)
-
-  params <- list(`__EVENTTARGET` = type,
-                 `__EVENTARGUMENT` = "",
-                 `__LASTFOCUS` = "",
-                 `__VIEWSTATE` = states$vs,
-                 `__EVENTVALIDATION` = states$ev,
-                 `ctl00$conteudo$ddlAnos` = year,
-                 `ctl00$conteudo$ddlRegioes` = "0",
-                 `ctl00$conteudo$ddlMunicipios` = city,
-                 `ctl00$conteudo$ddlDelegacias` = "0")
-
-  httr::POST(url, body = params, encode = 'form') %>%
-    xml2::read_html() %>%
-    rvest::html_table() %>%
-    dplyr::first() %>%
-    #serve pra pegar apenas a primeira tabela da página, se houver mais do que uma. Estou assumindo que a tabela que eu quero é sempre a primeira.
-    dplyr::mutate_at(.funs = parse_number_br, .vars = dplyr::vars(Jan:Total)) %>%
-    dplyr::mutate(municipio = city,
-                  ano = year)
-}
 
 #' Download detailed information publicized by São Paulo's Security Office
 #'
