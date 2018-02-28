@@ -1,0 +1,44 @@
+---
+title: "Análise da criminalidade no tempo"
+author: "José de Jesus Filho"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignhette will give one exemple of how to use package brcrimR to import crime and demographic data from São Paulo state to analyse crime time series. First let's load all necessery packages to carry out the analysis:
+
+```{r}
+library(tidyverse)
+library(tidyquant)
+library(timetk)
+library(sweep)
+library(forecasts)
+library(brcrimR)
+```
+
+In this case, we will compare the crime rates in the city of Osasco, which is located at the metropolitan area of São Paulo in the state of São Paulo, Brazil, with the whole metropolitan area crime rate and also the state crime rate. For brevity, will only analyse property crimes, specifically thefs and robberys. We will analyse data from the last five years ranging from 2013 to 2017.  As we are going to get population data from another source, we will get crime data from every city intead from the whole metropolitan region so we can joing the pop data with the crime data. The function \code{get_summary_table_sp} will be used to do so. But we will have to download data from every year and every city separatedly, so two nested maps will be necessary.
+
+```{r}
+years<-2013:2017 %>% as.character()
+
+osasco_region<-years %>% 
+  map_dfr(~{
+    map2_dfr(.x,city_santos$code,~{
+      get_summarized_table_sp(.x,.y)
+    })
+    
+  })
+
+```
+

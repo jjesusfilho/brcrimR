@@ -6,8 +6,10 @@
 \title{Data with São Paulo state cities and codes}
 \format{A data frame with 645 rows and 2 variables:
 \describe{
-  \item{code}{City's code, from 1 to 645}
   \item{city}{City's name}
+  \item{code_adm}{City's administration code, from 1 to 645}
+  \item{code_ssp}(City's public security code)
+
   ...
 }}
 \usage{
