@@ -1,6 +1,6 @@
 helper_sp <- function(f, y, m, d){
     f <- dplyr::case_when(
-      stringr::str_detect(f, "[hh]omic[íi]") ~ "btnHomicicio",
+      stringr::str_detect(f, "[hh]omic[\u00edi]") ~ "btnHomicicio",
       TRUE ~ f
     )
 

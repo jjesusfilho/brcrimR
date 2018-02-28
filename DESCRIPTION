@@ -3,7 +3,7 @@ Title: Downloads Brazilian Criminal Information
 Version: 0.0.0.9000
 Authors@R: c(person("Fernando", "Corrêa", email = "fcorrea@abjur.com", role = c("aut", "cre")),
              person("José", "de Jesus", email = "jjesusfilho@gmail.com", role = c("aut")))
-Description: Brazillian security offices maintains several sources of criminal information. Very often, those sources are not user friendly, specially when building historical databases. This packages provides a tidy and (almost) unified framework for accessing of those informations. 
+Description: Brazillian security departments maintains several sources of criminal information. Very often, those sources are not user friendly, specially when building historical databases. This packages provides a tidy and (almost) unified framework for accessing those information. 
 Depends: R (>= 3.3.2)
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -12,7 +12,11 @@ Imports: httr,
     xml2,
     rvest,
     dplyr,
-    glue
+    glue,
+    stringr,
+    purrr,
+    readr,
+    magrittr
 RoxygenNote: 6.0.1
 Suggests: 
     knitr,

@@ -7,8 +7,7 @@
 #' \describe{
 #'   \item{city}{City's name}
 #'   \item{code_adm}{City's administration code, from 1 to 645}
-#'   \item{code_ssp}(City's public security code)
-#'
+#'   \item{code_ssp}{City's public security code}
 #'   ...
 #' }
 "cities"

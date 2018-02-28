@@ -3,14 +3,14 @@
 #'@param year Year to download.
 #'@param city Intended city. Is a number between 1 and 645, representing the rank of the city in alphabetical order.
 #'@param type Formulary to make the request, encodes the type of information to be downloaded.
-#'"ctl00$conteudo$$btnMes" downloads recorded crime count.
+#'    "ctl00$conteudo$$btnMes" downloads recorded crime count.
 #'@param region Intended region. Is a number between 0 and 9, representing an administrative region.
 #'@param police_station number of the police station
-
+#'
 #' @export
 get_summarized_table_sp <-
-  function (year,
-            city,
+  function (year=NULL,
+            city=NULL,
             type = "ctl00$conteudo$btnMensal",
             region = "0",
             police_station = "0")
@@ -41,24 +41,30 @@ get_summarized_table_sp <-
 
 #' Download detailed information publicized by São Paulo's Security Office
 #'
+#' @param dir Destination directory. It defaults to current directory.
 #' @param year Year to download.
 #' @param month Intended city. Is a number between 1 and 645, representing the rank of the city in alphabetical order.
-#' @param type Formulary to make the request, encodes the type of information to be downloaded.
+#' @param police_station number of the police station
+#' @param helper Logical. If TRUE (default), it will compatibilize the argument values with those required by the department.
+#' @param ...  other arguments passed on to the httr::POST function
 #'
 #' @export
-get_detailed_table_sp <- function(folder, year, month, department, url = 'http://www.ssp.sp.gov.br/transparenciassp/', helper = T, ...){
+get_detailed_table_sp <- function(dir=".", year=NULL, month=NULL, police_station=NULL,  helper = T,...){
+
+
+  url = 'http://www.ssp.sp.gov.br/transparenciassp/'
 
   if(helper){
-    h <- helper_sp(folder, year, month, department)
+    h <- helper_sp(f=dir, y=year, m=month, d=police_station)
   } else {
-    h <- list(f = folder, y = year, m = month, d = department)
+    h <- list(f = dir, y = year, m = month, d = police_station)
   }
 
   httr::GET(url) %>%
-    browse(h$f, dest = 'folder') %>%
+    browse(h$f, dest = 'dir') %>%
     browse(h$y, dest = 'year') %>%
     browse(h$m, dest = 'month') %>%
-    get_table(h$d, ...) %>%
+    get_table(h$d, dest='police_station') %>%
     open_table()
 }
 
@@ -69,30 +75,33 @@ browse <- function(r, val, dest){
   httr::POST(r$url, body = params, encode = 'form', handle = r)
 }
 
-get_table <- function(r, department = '0', hdf = "1504014009092", export_header = "ExportarBOLink", ...){
+get_table <- function(r, police_station = '0', hdf = "1504014009092", export_header = "ExportarBOLink", ...){
 
-  params <- basic_params(export_header, 'folder', get_viewstate(r)) %>%
-    append(list(`ctl00$cphBody$filtroDepartamento` = department,
+  params <- basic_params(export_header, 'dir', get_viewstate(r)) %>%
+    append(list(`ctl00$cphBody$filtroDepartamento` = police_station,
                 `ctl00$cphBody$hdfExport` = hdf))
 
   httr::POST(r$url, body = params, encode = 'form', handle = r, ...)
 }
 
 #' @export
-get_historical_detailed_table_sp <- function(f, y, m, d){
+#' @describeIn get_detailed_table_sp Get historical detailed table
+get_historical_detailed_table_sp <- function(){
 
-  h <- helper_sp(f, y, m, d)
+  h <- helper_sp(f=dir, y=year, m=month, d=police_station)
 
-  expand.grid(folder = h$f, year = h$y, month = h$m, department = h$d,
+  expand.grid(dir = h$f, year = h$y, month = h$m, police_station = h$d,
               stringsAsFactors = F) %>%
     as.list() %>%
     purrr::pmap(get_detailed_table_sp, helper = F)
 }
 
 #' @export
-get_historical_summarized_table_sp <- function(y, c, ty){
+#' @describeIn get_summarized_table_sp Allows for getting summarized tables from
+#'     multiple years and cities.
+get_historical_summarized_table_sp <- function(){
 
-  expand.grid(year = y, city = c, type = ty,
+  expand.grid(year=year, city=city, type=type,
               stringsAsFactors = F) %>%
     as.list() %>%
     purrr::pmap_df(get_summarized_table_sp)

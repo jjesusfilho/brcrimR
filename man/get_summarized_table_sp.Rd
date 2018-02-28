@@ -2,9 +2,13 @@
 % Please edit documentation in R/sp.R
 \name{get_summarized_table_sp}
 \alias{get_summarized_table_sp}
+\alias{get_historical_summarized_table_sp}
 \title{Download tables publicized by the São Paulo's Security Office}
 \usage{
-get_summarized_table_sp(year, city, type = "ctl00$conteudo$btnMensal")
+get_summarized_table_sp(year = NULL, city = NULL,
+  type = "ctl00$conteudo$btnMensal", region = "0", police_station = "0")
+
+get_historical_summarized_table_sp()
 }
 \arguments{
 \item{year}{Year to download.}
@@ -13,7 +17,17 @@ get_summarized_table_sp(year, city, type = "ctl00$conteudo$btnMensal")
 
 \item{type}{Formulary to make the request, encodes the type of information to be downloaded.
 "ctl00$conteudo$$btnMes" downloads recorded crime count.}
+
+\item{region}{Intended region. Is a number between 0 and 9, representing an administrative region.}
+
+\item{police_station}{number of the police station}
 }
 \description{
 Download tables publicized by the São Paulo's Security Office
 }
+\section{Functions}{
+\itemize{
+\item \code{get_historical_summarized_table_sp}: Allows for getting summarized tables from
+multiple years and cities.
+}}
+
