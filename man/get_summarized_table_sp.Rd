@@ -24,6 +24,8 @@ get_historical_summarized_table_sp()
 }
 \description{
 Download tables publicized by the São Paulo's Security Office
+
+Downloads summarized crime tables from multiple years and cities
 }
 \section{Functions}{
 \itemize{

@@ -25,6 +25,8 @@ get_historical_detailed_table_sp()
 }
 \description{
 Download detailed information publicized by São Paulo's Security Office
+
+Downloads historical detailed crime table
 }
 \section{Functions}{
 \itemize{

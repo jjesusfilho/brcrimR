@@ -21,4 +21,6 @@ if(getRversion() >= "2.15.1")
                             "c","d","m","f","r",
                            "Jan","Total","helper",
                            "url","params","body",
-                           "states","pivot","encode"))
+                           "states","pivot","encode",
+                           "city","year","month",
+                           "type","police_station"))

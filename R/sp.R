@@ -84,6 +84,8 @@ get_table <- function(r, police_station = '0', hdf = "1504014009092", export_hea
   httr::POST(r$url, body = params, encode = 'form', handle = r, ...)
 }
 
+#' Downloads historical detailed crime table
+#'
 #' @export
 #' @describeIn get_detailed_table_sp Get historical detailed table
 get_historical_detailed_table_sp <- function(){
@@ -96,6 +98,8 @@ get_historical_detailed_table_sp <- function(){
     purrr::pmap(get_detailed_table_sp, helper = F)
 }
 
+#' Downloads summarized crime tables from multiple years and cities
+#'
 #' @export
 #' @describeIn get_summarized_table_sp Allows for getting summarized tables from
 #'     multiple years and cities.
